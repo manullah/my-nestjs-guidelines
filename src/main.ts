@@ -36,8 +36,8 @@ async function bootstrap() {
   });
 
   const config = new DocumentBuilder()
-    .setTitle('Median')
-    .setDescription('The Median API description')
+    .setTitle('NestJs Example')
+    .setDescription('The NestJs Example API description')
     .addBearerAuth()
     .build();
 
