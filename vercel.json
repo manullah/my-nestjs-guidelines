@@ -1,9 +1,5 @@
 {
   "version": 2,
-  "env": {
-      "PORT": "@PORT",
-      "DATABASE_URL": "@DATABASE_URL"
-  },
   "builds": [
       {
           "src": "src/main.ts",
