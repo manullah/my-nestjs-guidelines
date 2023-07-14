@@ -10,6 +10,9 @@ import {
 import { ValidationError } from 'class-validator';
 import { PrismaClientExceptionFilter } from './prisma-client-exception/prisma-client-exception.filter';
 
+// Use port number from the PORT environment variable or 3000 if not specified
+const port = process.env.PORT || 3000;
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -47,6 +50,6 @@ async function bootstrap() {
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
-  await app.listen(parseInt(process.env.PORT) || 3000);
+  await app.listen(port);
 }
 bootstrap();
