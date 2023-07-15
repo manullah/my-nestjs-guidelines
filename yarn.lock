@@ -4205,6 +4205,11 @@ pretty-format@^29.0.0, pretty-format@^29.5.0:
     ansi-styles "^5.0.0"
     react-is "^18.0.0"
 
+prisma-pagination@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/prisma-pagination/-/prisma-pagination-0.2.3.tgz#5b76b4d2a1328930fb63b28794cbedcbe06a07fd"
+  integrity sha512-KVKCGz5BVTYK64dpqCo7ITNFN02UN5hSzBYyR4vqNF7I4BetUeO/q7B7FECmCOPIyCBWYf2Zte68pD9S2khD3g==
+
 prisma@^4.15.0:
   version "4.15.0"
   resolved "https://registry.yarnpkg.com/prisma/-/prisma-4.15.0.tgz#4faa94f0d584828b68468953ff0bc88f37912c8c"

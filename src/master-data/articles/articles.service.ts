@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { QueryArticleDto } from './dto/query-article.dto';
+import { createPaginator } from 'prisma-pagination';
+import { Article, Prisma } from '@prisma/client';
 
 @Injectable()
 export class ArticlesService {
@@ -11,12 +14,26 @@ export class ArticlesService {
     return this.prisma.article.create({ data: createArticleDto });
   }
 
-  findAll() {
-    return this.prisma.article.findMany({ where: { published: true } });
-  }
+  async findAll(queryDto: QueryArticleDto) {
+    const paginate = createPaginator({
+      perPage: queryDto.perPage,
+      page: queryDto.page,
+    });
 
-  findDrafts() {
-    return this.prisma.article.findMany({ where: { published: false } });
+    const articles = await paginate<Article, Prisma.ArticleFindManyArgs>(
+      this.prisma.article,
+      {
+        where: {
+          published: !!!queryDto.isDraft,
+        },
+        orderBy: queryDto.getOrderBy,
+        include: {
+          author: true,
+        },
+      },
+    );
+
+    return articles;
   }
 
   findOne(id: number) {

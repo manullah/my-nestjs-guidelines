@@ -9,13 +9,17 @@ import {
   ParseIntPipe,
   NotFoundException,
   UseGuards,
+  Query,
+  HttpStatus,
 } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ArticleEntity } from './entities/article.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { QueryArticleDto } from './dto/query-article.dto';
+import { ResponseEntity } from 'src/lib/entities';
 
 @Controller({
   path: 'master-data/articles',
@@ -29,30 +33,41 @@ export class ArticlesController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   async create(@Body() createArticleDto: CreateArticleDto) {
-    return new ArticleEntity(
-      await this.articlesService.create(createArticleDto),
-    );
+    const article = await this.articlesService.create(createArticleDto);
+
+    return new ResponseEntity({
+      statusCode: HttpStatus.OK,
+      message: 'created',
+      data: new ArticleEntity(article),
+    });
   }
 
   @Get()
-  async findAll() {
-    const articles = await this.articlesService.findAll();
-    return articles.map((article) => new ArticleEntity(article));
-  }
+  @ApiQuery({ type: QueryArticleDto })
+  async findAll(@Query() queryDto: QueryArticleDto) {
+    const articles = await this.articlesService.findAll(queryDto);
 
-  @Get('drafts')
-  async findDrafts() {
-    const drafts = await this.articlesService.findDrafts();
-    return drafts.map((draft) => new ArticleEntity(draft));
+    return new ResponseEntity({
+      statusCode: HttpStatus.OK,
+      message: 'success',
+      items: new ArticleEntity().collection(articles.data),
+      meta: articles.meta,
+    });
   }
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const article = await this.articlesService.findOne(id);
+
     if (!article) {
       throw new NotFoundException(`Article with ${id} does not exist.`);
     }
-    return new ArticleEntity(article);
+
+    return new ResponseEntity({
+      statusCode: HttpStatus.OK,
+      message: 'success',
+      data: new ArticleEntity(article),
+    });
   }
 
   @Patch(':id')
@@ -62,15 +77,25 @@ export class ArticlesController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateArticleDto: UpdateArticleDto,
   ) {
-    return new ArticleEntity(
-      await this.articlesService.update(id, updateArticleDto),
-    );
+    const article = await this.articlesService.update(id, updateArticleDto);
+
+    return new ResponseEntity({
+      statusCode: HttpStatus.OK,
+      message: 'updated',
+      data: new ArticleEntity(article),
+    });
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   async remove(@Param('id', ParseIntPipe) id: number) {
-    return new ArticleEntity(await this.articlesService.remove(id));
+    const article = await this.articlesService.remove(id);
+
+    return new ResponseEntity({
+      statusCode: HttpStatus.OK,
+      message: 'deleted',
+      data: new ArticleEntity(article),
+    });
   }
 }
