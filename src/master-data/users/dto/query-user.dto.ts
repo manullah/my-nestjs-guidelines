@@ -5,7 +5,7 @@ import { toNumber } from 'src/lib/helpers/cast.helper';
 import { InArray } from 'src/lib/validators';
 import { OrderBy } from '../enums/order-by.enum';
 
-export class QueryArticleDto {
+export class QueryUserDto {
   @Transform(({ value }) => toNumber(value, { default: 1, min: 1 }))
   @IsNumber()
   @IsOptional()
@@ -25,9 +25,6 @@ export class QueryArticleDto {
 
   @IsOptional()
   search?: string;
-
-  @IsOptional()
-  isDraft?: boolean;
 
   get getOrderBy() {
     if (this.orderBy) {

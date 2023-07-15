@@ -7,12 +7,6 @@ export class UserEntity implements User {
   id: number;
 
   @ApiProperty()
-  createdAt: Date;
-
-  @ApiProperty()
-  updatedAt: Date;
-
-  @ApiProperty()
   name: string;
 
   @ApiProperty()
@@ -21,7 +15,17 @@ export class UserEntity implements User {
   @Exclude()
   password: string;
 
-  constructor(partial: Partial<UserEntity>) {
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  updatedAt: Date;
+
+  constructor(partial?: Partial<UserEntity>) {
     Object.assign(this, partial);
+  }
+
+  collection(partials?: Partial<User[]>) {
+    return partials.map((item) => new UserEntity(item)) || [];
   }
 }

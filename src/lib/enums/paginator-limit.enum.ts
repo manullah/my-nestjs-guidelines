@@ -7,3 +7,7 @@ export const PaginatorLimit = {
 
 export type PaginatorLimit =
   (typeof PaginatorLimit)[keyof typeof PaginatorLimit];
+
+export const PaginatorLimitArray = Object.values(
+  PaginatorLimit,
+) as PaginatorLimit[];
